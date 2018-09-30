@@ -359,11 +359,5 @@ instance.prototype.action = function(action) {
 	}
 };
 
-instance.module_info = {
-	label: 'Barco dcs',
-	id: 'dcs',
-	version: '0.0.1'
-};
-
 instance_skel.extendedBy(instance);
 exports = module.exports = instance;
