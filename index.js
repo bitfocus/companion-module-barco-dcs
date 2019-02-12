@@ -1,6 +1,6 @@
 var tcp = require('../../tcp');
 var instance_skel = require('../../instance_skel');
-var TelnetSocket = require("telnet-stream").TelnetSocket;
+var TelnetSocket = require('../../telnet');
 var debug;
 var log;
 
@@ -30,25 +30,24 @@ instance.prototype.incomingData = function(data) {
 	debug(data);
 
 	if (self.login === false && data.match("DCS-200 login:")) {
-		self.status(1,'Logging in');
-		self.telnet.write("user"+ "\n");
+		self.status(self.STATUS_WARNING,'Logging in');
+		self.socket.write("user"+ "\n");
 	}
 
 	if (self.login === false && data.match("Password:")) {
-		self.status(1,'Logging in');
-		self.telnet.write(""+ "\n");
+		self.status(self.STATUS_WARNING,'Logging in');
+		self.socket.write(""+ "\n");
 	}
 
 
 	else if (self.login === false && data.match("ShellApp waiting for input")) {
 		self.login = true;
-		self.status(0);
+		self.status(self.STATUS_OK);
 		debug("logged in");
 	}
 	else if (self.login === false && data.match('login incorrect')) {
-		debug("incorrect username/password");
-		self.status(2,'Incorrect user/pass');
-
+		self.log('error', "incorrect username/password (expected to be 'user' and no password)");
+		self.status(self.STATUS_ERROR, 'Incorrect user/pass');
 	}
 	else {
 		debug("data nologin", data);
@@ -75,10 +74,12 @@ instance.prototype.init_tcp = function() {
 	}
 
 	if (self.config.host) {
-		self.socket = new tcp(self.config.host, 23);
+		self.socket = new TelnetSocket(self.config.host, 23);
 
 		self.socket.on('status_change', function (status, message) {
-			self.status(status, message);
+			if (status !== self.STATUS_OK) {
+				self.status(status, message);
+			}
 		});
 
 		self.socket.on('error', function (err) {
@@ -91,29 +92,29 @@ instance.prototype.init_tcp = function() {
 			self.login = false;
 		});
 
-		self.telnet = new TelnetSocket(self.socket.socket);
-
 		self.socket.on('error', function (err) {
 			debug("Network error", err);
 			self.log('error',"Network error: " + err.message);
+			self.login = false;
 		});
 
 		// if we get any data, display it to stdout
-		self.telnet.on("data", function(buffer) {
+		self.socket.on("data", function(buffer) {
 			var indata = buffer.toString("utf8");
 			self.incomingData(indata);
 		});
 
-		// tell remote we WONT do anything we're asked to DO
-		self.telnet.on("do", function(option) {
-			return self.telnet.writeWont(option);
-		});
+		self.socket.on("iac", function(type, info) {
+			// tell remote we WONT do anything we're asked to DO
+			if (type == 'DO') {
+				socket.write(new Buffer([ 255, 252, info ]));
+			}
 
-		// tell the remote DONT do whatever they WILL offer
-		self.telnet.on("will", function(option) {
-			return self.telnet.writeDont(option);
+			// tell the remote DONT do whatever they WILL offer
+			if (type == 'WILL') {
+				socket.write(new Buffer([ 255, 254, info ]));
+			}
 		});
-
 	}
 };
 
@@ -351,7 +352,7 @@ instance.prototype.action = function(action) {
 	if (cmd !== undefined) {
 
 		if (self.socket !== undefined && self.socket.connected) {
-			self.telnet.write(cmd+"\n");
+			self.socket.write(cmd+"\n");
 		} else {
 			debug('Socket not connected :(');
 		}
