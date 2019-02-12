@@ -1,18 +1,22 @@
 {
-  "name": "dcs",
-  "version": "1.0.1",
+	"name": "dcs",
+	"version": "1.0.2",
 	"api_version": "1.0.0",
-	"legacy": ["barco-dcs"],
-	"keywords": [ "Image Processing" ],
+	"legacy": [
+		"barco-dcs"
+	],
+	"keywords": [
+		"Image Processing"
+	],
 	"manufacturer": "Barco",
 	"product": "DCS 100/200",
 	"shortname": "dcs",
 	"homepage": "https://www.barco.com/product/dcs-200",
-  "description": "Module to controll Barco dcs 100/200",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "Per Røine <per.roine@gmail.com>",
-  "license": "ISC"
+	"description": "Module to controll Barco dcs 100/200",
+	"main": "index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"author": "Per Røine <per.roine@gmail.com>",
+	"license": "ISC"
 }
