@@ -1,10 +1,11 @@
 {
-	"name": "dcs",
+	"name": "barco-dcs",
+	"legacy": [
+		"barco-dcs",
+		"dcs"
+	],
 	"version": "1.0.2",
 	"api_version": "1.0.0",
-	"legacy": [
-		"barco-dcs"
-	],
 	"keywords": [
 		"Image Processing"
 	],

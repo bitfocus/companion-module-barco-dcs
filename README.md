@@ -1,2 +1,2 @@
-# companion-module-dcs
+# companion-module-barco-dcs
 See HELP.md and LICENSE
