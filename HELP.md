@@ -5,6 +5,8 @@ This module connects to DCS.
 * Type in the IP address of the device.
 * The device will communicate over port 23.
 
+>> Updated port can be changed as new firmware uses port 3000
+
 ### Available actions
 * Run Command
 * Take

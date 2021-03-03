@@ -1,4 +1,3 @@
-var tcp = require('../../tcp');
 var instance_skel = require('../../instance_skel');
 var TelnetSocket = require('../../telnet');
 var debug;
@@ -74,7 +73,8 @@ instance.prototype.init_tcp = function() {
 	}
 
 	if (self.config.host) {
-		self.socket = new TelnetSocket(self.config.host, 23);
+		if (self.config.port == undefined) self.config.port = '23';
+		self.socket = new TelnetSocket(self.config.host, self.config.port);
 
 		self.socket.on('status_change', function (status, message) {
 			if (status !== self.STATUS_OK) {
@@ -134,9 +134,17 @@ instance.prototype.config_fields = function () {
 			type: 'textinput',
 			id: 'host',
 			label: 'DCS IP address',
-			width: 12,
+			width: 6,
 			default: '192.168.0.1',
 			regex: self.REGEX_IP
+		},
+		{
+			type: 'textinput',
+			id: 'port',
+			label: 'DCS port',
+			width: 6,
+			default: 23,
+			regex: self.REGEX_PORT
 		}
 	]
 };
