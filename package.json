@@ -12,12 +12,19 @@
 	"manufacturer": "Barco",
 	"product": "DCS 100/200",
 	"shortname": "dcs",
-	"homepage": "https://www.barco.com/product/dcs-200",
+	"homepage": "https://github.com/bitfocus/companion-module-barco-dcs#readme",
 	"description": "Module to controll Barco dcs 100/200",
 	"main": "index.js",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
 	"author": "Per Røine <per.roine@gmail.com>",
-	"license": "ISC"
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/bitfocus/companion-module-barco-dcs/issues"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/bitfocus/companion-module-barco-dcs.git"
+	}
 }
